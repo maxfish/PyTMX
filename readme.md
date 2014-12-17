@@ -64,19 +64,6 @@ For bugs or feature requests, please use the issues feature of github.  For
 all other general questions, join me on IRC at freennode.net #pygame.
 
 
-Design Goals and Features
-===============================================================================
-
-* API with many handy functions
-* Memory efficient and performant
-* Loads data, "properties" metadata, and images from Tiled's TMX format
-* Supports base64, csv, gzip, zlib and uncompressed XML
-* Properties for all native Tiled object types
-* Point data for polygon and polyline objects
-* Automatic flipping and rotation of tiles
-* Built-in image loading with pygame (will work without images as well)
-
-
 Why use PyTMX?
 ===============================================================================
 
@@ -85,9 +72,15 @@ Why use PyTMX?
 * Map information is stored as integers (16 bit), not python objects (32+kb)
 * Extensive use of generators and iterators make it easy on memory
 * Code is designed for compact size and readability
+* Automatic flipping and rotation of tiles
+* Built-in image loading with pygame (will work without images as well)
 
 ### PyTMX is flexible:
+* API with many handy functions
+* Loads data, "properties" metadata, and images from Tiled's TMX format
+* Supports base64, csv, gzip, zlib and uncompressed XML
 * Supports all major Tiled features and object types
+* Point data for polygon and polyline objects
 * PyTMX data classes can be extended
 * Does not force you to render data in any particular way
 * Includes many checks to give useful debugging information
@@ -118,6 +111,7 @@ Basic use:
 ===============================================================================
 
 #### Just data:
+
 ```python
 import pytmx
 tmx_data = pytmx.TiledMap('map.tmx')
@@ -137,7 +131,7 @@ don't have to worry about that after you load the map.
 #### Getting the Tile Surface
 
 ```python
-image = tmx_data.get_tile_image(x, y, layer)
+image = tmxdata.get_tile_image(x, y, layer)
 screen.blit(image, position)
 ```
 
@@ -149,7 +143,7 @@ Properties are any key/value data added to an object/map/layer in Tiled
 through the properties dialog.  Tile properties are accessed through the the
 parent map object:
 
-```
+```python
 tmxdata = TiledMap('level1.tmx')
 props = txmdata.get_tile_properties(x, y, layer)
 props = tmxdata.get_tile_properties_by_gid(tile_gid)
@@ -174,35 +168,6 @@ maps.  Please feel free to test drive it.  It isn't limited to Tiled maps,
 you can use any data structure you want, as long as PyGame is used.
 
 https://github.com/bitcraft/pyscroll
-
-
-Reserved Names
-================================================================================
-
-If you use "properties" for any of the following object types, you cannot use
-any of these words as a name for your property.  A ValueError will be raised
-if a Tile Object attempts to use a reserved name.
-
-In summary: don't use the following names when adding metadata in Tiled.
-
-As of 0.8.1, these values are:
-
-map:         version, orientation, width, height, tilewidth, tileheight  
-             properties, tileset, layer, objectgroup  
-
-tileset:     firstgid, source, name, tilewidth, tileheight, spacing, margin,  
-             image, tile, properties  
-
-tile:        id, image, properties  
-
-layer:       name, x, y, width, height, opacity, properties, data  
-
-objectgroup: name, color, x, y, width, height, opacity, object, properties  
-
-object:      name, type, x, y, width, height, gid, properties, polygon,  
-             polyline, image
-
-***   Please see the TiledMap class source for more api information.   ***
 
 
 Version Numbering

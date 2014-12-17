@@ -25,13 +25,6 @@ Design Goals and Features
 * Image loading with pygame (will work without images as well)
 
 
-Getting Help
-============
-
-For bugs or feature requests, please use the issues feature of github.  For
-all other general questions, join me on IRC at freennode.net #pygame.
-
-
 Installation
 ============
 
@@ -60,9 +53,9 @@ From a XML string:
     >>> tmxdata = pytmx.TiledMap.fromstring(xml_string)
 
 
-Load with PyGame surfaces:
+Load with pygame surfaces:
 
-    >>> from test_pytmx import load_pygame
+    >>> from pytmx import load_pygame
     >>> tmxdata = load_pygame("map.tmx")
 
 
@@ -105,11 +98,18 @@ scrolling maps.
 https://github.com/bitcraft/pyscroll
 
 
-Import Notice for PyGame Users
+Import Notice for pygame Users
 ==============================
 
 The loader will correctly convert() or convert_alpha() each tile image, so you
 shouldn't attempt to circumvent the loading mechanisms.
+
+
+Getting Help
+============
+
+For bugs or feature requests, please use the issues feature of github.  For
+all other general questions, join me on IRC at freennode.net #pygame.
 
 
 API Documentation

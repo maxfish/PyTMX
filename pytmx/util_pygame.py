@@ -141,7 +141,7 @@ def build_rects(tmxmap, layer, tileset=None, real_gid=None):
     gid = None
     if real_gid:
         try:
-            gid, flags = tmxmap.map_gid(real_gid)[0]
+            gid, flags = tmxmap._map_gid(real_gid)[0]
         except IndexError:
             msg = "GID #{0} not found"
             logger.debug(msg.format(real_gid))
