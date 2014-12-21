@@ -173,8 +173,8 @@ def set_properties(object_, node):
     cast_and_set_attributes_from_node_items(object_, node.items())
     properties = parse_properties(node)
     if contains_invalid_property_name(object_, properties.items()):
-        msg = "This name(s) is reserved for {0} objects and cannot be used."
-        logger.error(msg.format(object_.__class__.__name__))
+        msg = "This name(s) {1} is reserved for {0} objects and cannot be used."
+        logger.error(msg.format(object_.__class__.__name__, properties.items()))
         logger.error("Please change the name(s) in Tiled and try again.")
         raise ValueError
 

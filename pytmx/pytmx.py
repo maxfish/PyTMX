@@ -170,6 +170,7 @@ class TiledMap(TiledElement):
         :param layer_number: layer number
         :rtype: surface if found, otherwise 0
         """
+        self._verify_tile_position(x, y, layer_number)
         return self.get_tile_image_by_gid(self.get_tile_gid(x, y, layer_number))
 
     def get_tile_image_by_gid(self, gid):

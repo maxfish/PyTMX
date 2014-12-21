@@ -6,7 +6,7 @@ WIP - all code that isn't abandoned is WIP
 import os.path
 from itertools import repeat
 from unittest import TestCase
-from mock import Mock
+from mock import Mock, MagicMock
 from mock import patch
 
 import pytmx
@@ -89,14 +89,13 @@ class TiledMapTest(TestCase):
             self.m.get_object_by_name(123)
 
     def test_get_tile_properties_by_gid_valid(self):
-        expected = {'name', 'grass'}
+        expected = {'name': 'grass'}
         value = self.m.get_tile_properties_by_gid(17)
         self.assertEqual(expected, value)
 
     def test_get_tile_properties_by_gid_invalid(self):
-        expected = None
         value = self.m.get_tile_properties_by_gid(0)
-        self.assertEqual(expected, value)
+        self.assertIsNone(value)
 
     def test_verify_tile_position_valid(self):
         # just run and hope exceptions are not raised
@@ -167,32 +166,33 @@ class handle_bool_TestCase(TestCase):
 
 class TiledElementTestCase(TestCase):
 
-    def setUp(self):
-        self.tiled_element = TiledElement()
-        self.tiled_element.name = "Foo"
-
-    #def test_from_xml_string_should_raise_on_TiledElement(self):
-    #    with self.assertRaises(AttributeError):
-    #        TiledElement.from_xml_string("<element></element>")
-
     def test_when_property_is_reserved_contains_invalid_property_name_returns_true(self):
-        items = [("name", None)]
-        self.assertTrue(contains_invalid_property_name(self.tiled_element, items))
+        element = Mock(spec=TiledElement, autospec=True)
+        element.name = 'foo'
+        element._reserved = ['foo', 'foo_bar']
 
-        element = TiledMap()
-        items = zip(element.reserved, repeat(None))
+        # test reserved
+        items = zip(element._reserved, repeat(None))
+        self.assertTrue(contains_invalid_property_name(element, items))
+
+        # test if attribute is already set (name)
+        items = (('name', None),)
         self.assertTrue(contains_invalid_property_name(element, items))
 
     def test_when_property_is_not_reserved_contains_invalid_property_name_returns_false(self):
-        self.assertFalse(contains_invalid_property_name(self.tiled_element, list()))
+        element = MagicMock()
+        self.assertFalse(contains_invalid_property_name(element, list()))
 
-    # @patch("pytmx.util_xml.contains_invalid_property_name")
-    # def test_set_properties_raises_value_error_if_invalid_property_name_in_node(self, mock_parse_properties):
-    #     mock_node = Mock()
-    #     mock_node.items.return_value = list()
-    #     pytmx.util_xml.contains_invalid_property_name = Mock(return_value=True)
-    #     with self.assertRaises(ValueError):
-    #         pytmx.util_xml.set_properties(self.tiled_element, mock_node)
+    @patch("pytmx.util_xml.contains_invalid_property_name")
+    def test_set_properties_raises_value_error_if_invalid_property_name_in_node(self, mock_parse_properties):
+        mock_parse_properties.return_value = True
+        element = MagicMock()
+        mock_node = MagicMock()
+        mock_node.items.return_value = list()
+        with self.assertRaises(ValueError):
+            pytmx.util_xml.set_properties(element, mock_node)
 
     def test_repr(self):
-        self.assertEqual("<TiledElement: \"Foo\">", self.tiled_element.__repr__())
+        element = TiledElement()
+        element.name = "Foo"
+        self.assertEqual("<TiledElement: \"Foo\">", element.__repr__())

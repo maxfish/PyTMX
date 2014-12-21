@@ -10,9 +10,10 @@ from .pytmx import *
 from . import util_xml
 
 try:
-    from pytmx.util_pygame import load_pygame
+    from .util_pygame import load_pygame
 except ImportError:
     logger.debug('cannot import pygame tools')
+    raise
 
 
 __version__ = (3, 21, 0)
