@@ -1,10 +1,6 @@
 import logging
 
 logger = logging.getLogger(__name__)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-logger.addHandler(ch)
-logger.setLevel(logging.INFO)
 
 try:
     import pyglet
