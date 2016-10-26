@@ -44,6 +44,7 @@ def load_pysdl2(renderer, filename, *args, **kwargs):
     """ Basic loader for pytmx and pysdl2
 
     This loader requires that a rendering context is already created.
+    Does not handle colorkey transparency
 
     :param renderer: a pysdl2 renderer
     :param filename: filename of the map

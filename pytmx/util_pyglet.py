@@ -60,6 +60,7 @@ def pyglet_image_loader(filename, colorkey, **kwargs):
     This is a basic proof-of-concept and is likely to fail in some situations.
 
     Missing:
+        Does not handle colorkey transparency
         Transparency
         Tile Rotation
 

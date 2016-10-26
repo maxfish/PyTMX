@@ -59,6 +59,8 @@ def load_pysdl2_cffi(ctx, filename, *args, **kwargs):
 def pysdl2_cffi_image_loader(ctx, filename, colorkey, **kwargs):
     """ Basic image loading with pysdl2_cffi
 
+    Does not handle colorkey transparency
+
     :param ctx:
     :param filename:
     :param colorkey:
@@ -92,5 +94,10 @@ def pysdl2_cffi_image_loader(ctx, filename, colorkey, **kwargs):
             return texture, None, 0
 
     texture = sdl.image.loadTexture(ctx.renderer, filename)
+
+    # not sure if this is needed for normal map rendering operations
+    # # by default use the alpha channel of the texture
+    # if kwargs.get('pixelalpha', True):
+    #     sdl.setTextureBlendMode(texture, sdl.BLENDMODE_BLEND)
 
     return load_image
