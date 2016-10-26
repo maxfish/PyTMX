@@ -23,93 +23,19 @@ from __future__ import print_function
 import itertools
 import logging
 
-import pytmx
-
-__all__ = ('load_pygame', 'pygame_image_loader', 'simplify', 'build_rects')
-
 logger = logging.getLogger(__name__)
 
 try:
-    from pygame.transform import flip, rotate
     import pygame
+    from pygame.transform import flip, rotate
 except ImportError:
+    pygame = None
+    flip = None
+    rotate = None
     logger.error('cannot import pygame (is it installed?)')
     raise
 
-
-def handle_transformation(tile, flags):
-    if flags.flipped_diagonally:
-        tile = flip(rotate(tile, 270), 1, 0)
-    if flags.flipped_horizontally or flags.flipped_vertically:
-        tile = flip(tile, flags.flipped_horizontally, flags.flipped_vertically)
-    return tile
-
-
-def smart_convert(original, colorkey, pixelalpha):
-    """
-    this method does several tests on a surface to determine the optimal
-    flags and pixel format for each tile surface.
-
-    this is done for the best rendering speeds and removes the need to
-    convert() the images on your own
-    """
-    tile_size = original.get_size()
-    threshold = 127  # the default
-
-    # count the number of pixels in the tile that are not transparent
-    px = pygame.mask.from_surface(original, threshold).count()
-
-    # there are no transparent pixels in the image
-    if px == tile_size[0] * tile_size[1]:
-        tile = original.convert()
-
-    # there are transparent pixels, and tiled set a colorkey
-    elif colorkey:
-        tile = original.convert()
-        tile.set_colorkey(colorkey, pygame.RLEACCEL)
-
-    # there are transparent pixels, and set for perpixel alpha
-    elif pixelalpha:
-        tile = original.convert_alpha()
-
-    # there are transparent pixels, and we won't handle them
-    else:
-        tile = original.convert()
-
-    return tile
-
-
-def pygame_image_loader(filename, colorkey, **kwargs):
-    """ pytmx image loader for pygame
-
-    :param filename:
-    :param colorkey:
-    :param kwargs:
-    :return:
-    """
-    if colorkey:
-        colorkey = pygame.Color('#{0}'.format(colorkey))
-
-    pixelalpha = kwargs.get('pixelalpha', True)
-    image = pygame.image.load(filename)
-
-    def load_image(rect=None, flags=None):
-        if rect:
-            try:
-                tile = image.subsurface(rect)
-            except ValueError:
-                logger.error('Tile bounds outside bounds of tileset image')
-                raise
-        else:
-            tile = image.copy()
-
-        if flags:
-            tile = handle_transformation(tile, flags)
-
-        tile = smart_convert(tile, colorkey, pixelalpha)
-        return tile
-
-    return load_image
+__all__ = ('load_pygame', 'pygame_image_loader', 'simplify', 'build_rects')
 
 
 def load_pygame(filename, *args, **kwargs):
@@ -130,9 +56,108 @@ def load_pygame(filename, *args, **kwargs):
     TL;DR:
     Don't attempt to convert() or convert_alpha() the individual tiles.  It is
     already done for you.
+
+    :param filename: filename of the map
+    :param args:
+    :param   kwargs:
+
+    :rtype: pytmx.TiledMap
     """
+    import pytmx
+
     kwargs['image_loader'] = pygame_image_loader
     return pytmx.TiledMap(filename, *args, **kwargs)
+
+
+def handle_transformation(tile, flags):
+    if flags.flipped_diagonally:
+        tile = flip(rotate(tile, 270), 1, 0)
+    if flags.flipped_horizontally or flags.flipped_vertically:
+        tile = flip(tile, flags.flipped_horizontally, flags.flipped_vertically)
+    return tile
+
+
+def smart_convert(original, colorkey, pixelalpha, destination=None):
+    """ Convert surface with or without alpha depending on the actual image
+
+    this method does several tests on a surface to determine the optimal
+    flags and pixel format for each tile surface.
+
+    this is done for the best rendering speeds and removes the need to
+    convert() the images on your own
+
+    if a destination is specified, then surfaces will be converted
+    to match it.  if not specified, then surfaces will be matched
+    to the screen.
+
+    :param original:
+    :param colorkey:
+    :param pixelalpha:
+    :param destination:
+
+    :rtype: pygame.Surface
+    """
+    if not destination:
+        destination = pygame.display.get_surface()
+
+    tile_size = original.get_size()
+    threshold = 127  # the default
+
+    # count the number of pixels in the tile that are not transparent
+    px = pygame.mask.from_surface(original, threshold).count()
+
+    # there are no transparent pixels in the image
+    if px == tile_size[0] * tile_size[1]:
+        tile = original.convert(destination)
+
+    # there are transparent pixels, and tiled set a colorkey
+    elif colorkey:
+        tile = original.convert(destination)
+        tile.set_colorkey(colorkey, pygame.RLEACCEL)
+
+    # there are transparent pixels, and set for perpixel alpha
+    elif pixelalpha:
+        tile = original.convert_alpha(destination)
+
+    # there are transparent pixels, and we won't handle them
+    else:
+        tile = original.convert(destination)
+
+    return tile
+
+
+def pygame_image_loader(filename, colorkey, **kwargs):
+    """ Basic image loading with pygame
+
+    :param filename:
+    :param colorkey:
+    :param kwargs:
+
+    :return: function
+    """
+    if colorkey:
+        colorkey = pygame.Color('#{0}'.format(colorkey))
+
+    pixelalpha = kwargs.get('pixelalpha', True)
+    image = pygame.image.load(filename)
+    destination = pygame.display.get_surface()
+
+    def load_image(rect=None, flags=None):
+        if rect:
+            try:
+                tile = image.subsurface(rect)
+            except ValueError:
+                logger.error('Tile bounds outside bounds of tileset image')
+                raise
+        else:
+            tile = image.copy()
+
+        if flags:
+            tile = handle_transformation(tile, flags)
+
+        return smart_convert(tile, colorkey, pixelalpha, destination)
+
+    return load_image
 
 
 def build_rects(tmxmap, layer, tileset=None, real_gid=None):

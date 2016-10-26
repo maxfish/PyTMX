@@ -23,15 +23,14 @@ from __future__ import print_function
 import logging
 from functools import partial
 
+logger = logging.getLogger(__name__)
+
 try:
     import sdl2.ext
 except ImportError:
+    sdl2 = None
     logger.error('cannot import pysdl2 (is it installed?)')
     raise
-
-import pytmx
-
-logger = logging.getLogger(__name__)
 
 __all__ = ('load_pysdl2', 'pysdl2_image_loader')
 
@@ -41,7 +40,34 @@ flag_names = (
     'flipped_diagonally',)
 
 
+def load_pysdl2(renderer, filename, *args, **kwargs):
+    """ Basic loader for pytmx and pysdl2
+
+    This loader requires that a rendering context is already created.
+
+    :param renderer: a pysdl2 renderer
+    :param filename: filename of the map
+    :param args:
+    :param kwargs:
+
+    :rtype: pytmx.TiledMap
+    """
+    import pytmx
+
+    kwargs['image_loader'] = partial(pysdl2_image_loader, renderer)
+    return pytmx.TiledMap(filename, *args, **kwargs)
+
+
 def pysdl2_image_loader(renderer, filename, colorkey, **kwargs):
+    """ Basic image loading with pysdl2
+
+    :param renderer:
+    :param filename:
+    :param colorkey:
+    :param kwargs:
+    :return:
+    """
+
     def convert(surface):
         texture_ = sdl2.SDL_CreateTextureFromSurface(renderer.renderer, surface)
         sdl2.SDL_SetTextureBlendMode(texture_, sdl2.SDL_BLENDMODE_BLEND)
@@ -78,8 +104,3 @@ def pysdl2_image_loader(renderer, filename, colorkey, **kwargs):
     texture = convert(image)
 
     return load_image
-
-
-def load_pysdl2(renderer, filename, *args, **kwargs):
-    kwargs['image_loader'] = partial(pysdl2_image_loader, renderer)
-    return pytmx.TiledMap(filename, *args, **kwargs)

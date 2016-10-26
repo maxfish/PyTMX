@@ -30,16 +30,17 @@ from xml.etree import ElementTree
 import six
 from six.moves import map
 
-__all__ = ('TiledElement',
-           'TiledMap',
-           'TiledTileset',
-           'TiledTileLayer',
-           'TiledObject',
-           'TiledObjectGroup',
-           'TiledImageLayer',
-           'TileFlags',
-           'convert_to_bool',
-           'parse_properties')
+__all__ = (
+    'TiledElement',
+    'TiledMap',
+    'TiledTileset',
+    'TiledTileLayer',
+    'TiledObject',
+    'TiledObjectGroup',
+    'TiledImageLayer',
+    'TileFlags',
+    'convert_to_bool',
+    'parse_properties')
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +69,7 @@ AnimationFrame = namedtuple('AnimationFrame', ['gid', 'duration'])
 def default_image_loader(filename, flags, **kwargs):
     """ This default image loader just returns filename, rect, and any flags
     """
+
     def load(rect=None, flags=None):
         return filename, rect, flags
 

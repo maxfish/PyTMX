@@ -22,21 +22,38 @@ from __future__ import print_function
 
 import logging
 
+logger = logging.getLogger(__name__)
+
 try:
     import pyglet
 except ImportError:
+    pyglet = None
     logger.error('cannot import pyglet (is it installed?)')
     raise
 
-import pytmx
-
 __all__ = ('load_pyglet', 'pyglet_image_loader')
 
-logger = logging.getLogger(__name__)
+
+def load_pyglet(filename, *args, **kwargs):
+    """ Load a map and images for pyglet
+
+    The invert_y kwarg is set to True automatically.
+
+    :param filename:
+    :param args:
+    :param kwargs:
+
+    :rtype: pytmx.TiledMap
+    """
+    import pytmx
+
+    kwargs['image_loader'] = pyglet_image_loader
+    kwargs['invert_y'] = True
+    return pytmx.TiledMap(filename, *args, **kwargs)
 
 
 def pyglet_image_loader(filename, colorkey, **kwargs):
-    """basic image loading with pyglet
+    """ Basic image loading with pyglet
 
     returns pyglet Images, not textures
 
@@ -46,7 +63,7 @@ def pyglet_image_loader(filename, colorkey, **kwargs):
         Transparency
         Tile Rotation
 
-    This is slow as well.
+    This is slow as [hw]ell
     """
     if colorkey:
         logger.debug('colorkey not implemented')
@@ -71,9 +88,3 @@ def pyglet_image_loader(filename, colorkey, **kwargs):
         return tile
 
     return load_image
-
-
-def load_pyglet(filename, *args, **kwargs):
-    kwargs['image_loader'] = pyglet_image_loader
-    kwargs['invert_y'] = True
-    return pytmx.TiledMap(filename, *args, **kwargs)

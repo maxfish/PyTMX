@@ -23,22 +23,50 @@ from __future__ import print_function
 import logging
 from functools import partial
 
+logger = logging.getLogger(__name__)
+
 try:
     import sdl
 except ImportError:
+    sdl = None
     logger.error('cannot import pysdl_cffi (is it installed?)')
     raise
 
 __all__ = ('load_pysdl2_cffi', 'pysdl2_cffi_image_loader')
 
-logger = logging.getLogger(__name__)
+flag_names = (
+    'flipped_horizontally',
+    'flipped_vertically',
+    'flipped_diagonally',)
 
-flag_names = ('flipped_horizontally',
-              'flipped_vertically',
-              'flipped_diagonally',)
+
+def load_pysdl2_cffi(ctx, filename, *args, **kwargs):
+    """ Load map and images using pysdl2_cffi
+
+    :param ctx:
+    :param filename:
+    :param args:
+    :param kwargs:
+
+    :rtype: pytmx.TiledMap
+    """
+    import pytmx
+
+    kwargs['image_loader'] = partial(pysdl2_cffi_image_loader, ctx)
+    return pytmx.TiledMap(filename, *args, **kwargs)
 
 
 def pysdl2_cffi_image_loader(ctx, filename, colorkey, **kwargs):
+    """ Basic image loading with pysdl2_cffi
+
+    :param ctx:
+    :param filename:
+    :param colorkey:
+    :param kwargs:
+
+    :return:
+    """
+
     def load_image(rect=None, flags=None):
         if rect:
             try:
@@ -66,10 +94,3 @@ def pysdl2_cffi_image_loader(ctx, filename, colorkey, **kwargs):
     texture = sdl.image.loadTexture(ctx.renderer, filename)
 
     return load_image
-
-
-def load_pysdl2_cffi(ctx, filename, *args, **kwargs):
-    import pytmx
-
-    kwargs['image_loader'] = partial(pysdl2_cffi_image_loader, ctx)
-    return pytmx.TiledMap(filename, *args, **kwargs)
