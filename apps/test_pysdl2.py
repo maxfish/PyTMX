@@ -13,25 +13,24 @@ for information on that process.
 
 Notice: slow!  no transparency!  no tile rotation!
 """
-import logging
-
-logger = logging.getLogger(__name__)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-logger.addHandler(ch)
-logger.setLevel(logging.INFO)
-
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 # QUICK SDL2 HACK FOR WINDOWS
 # 1. download and move SDL2.dll to apps folder
 # 2. uncomment the two lines of code below
 # 3. profit!
+import logging
 import os
+
 os.environ['PYSDL2_DLL_PATH'] = os.path.dirname(__file__)
 
-from pytmx import *
+from pytmx import TiledTileLayer
 from pytmx.util_pysdl2 import load_pysdl2
 from sdl2 import *
 import sdl2.ext
+
+logger = logging.getLogger(__name__)
 
 
 class TiledRenderer(object):
@@ -40,6 +39,7 @@ class TiledRenderer(object):
 
     no shape drawing yet
     """
+
     def __init__(self, filename, renderer):
         tm = load_pysdl2(renderer, filename)
         self.size = tm.width * tm.tilewidth, tm.height * tm.tileheight

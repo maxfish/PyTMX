@@ -1,17 +1,25 @@
-import logging
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-logger = logging.getLogger(__name__)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-logger.addHandler(ch)
-logger.setLevel(logging.INFO)
+from .pytmx import (TiledElement,
+                    TiledMap,
+                    TiledTileset,
+                    TiledTileLayer,
+                    TiledObject,
+                    TiledObjectGroup,
+                    TiledImageLayer,
+                    TileFlags)
 
-from .pytmx import *
+# not sure why this needs to be imported.
+# if not, it seems to break some code, idk
 try:
     from pytmx.util_pygame import load_pygame
 except ImportError:
-    logger.debug('cannot import pygame tools')
+    import logging
 
+    logger = logging.getLogger(__name__)
+    logger.debug('cannot import pygame tools')
 
 __version__ = (3, 20, 17)
 __author__ = 'bitcraft'

@@ -1,5 +1,5 @@
 """
-Copyright (C) 20012-2016
+Copyright (C) 2012-2016
 
 This file is part of pytmx.
 
@@ -16,9 +16,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with pytmx.  If not, see <http://www.gnu.org/licenses/>.
 """
-import logging
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
-logger = logging.getLogger(__name__)
+import logging
 
 try:
     import pyglet
@@ -27,6 +29,10 @@ except ImportError:
     raise
 
 import pytmx
+
+__all__ = ('load_pyglet', 'pyglet_image_loader')
+
+logger = logging.getLogger(__name__)
 
 
 def pyglet_image_loader(filename, colorkey, **kwargs):

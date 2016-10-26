@@ -1,5 +1,5 @@
 """
-Copyright (C) 20012-2016
+Copyright (C) 2012-2016
 
 This file is part of pytmx.
 
@@ -16,25 +16,21 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with pytmx.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
 import logging
-import six
 import os
-from itertools import chain, product
 from collections import defaultdict, namedtuple
-from xml.etree import ElementTree
-from six.moves import zip, map
+from itertools import chain, product
 from operator import attrgetter
+from xml.etree import ElementTree
 
-logger = logging.getLogger(__name__)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-logger.addHandler(ch)
-logger.setLevel(logging.INFO)
+import six
+from six.moves import map
 
-__all__ = ['TiledElement',
+__all__ = ('TiledElement',
            'TiledMap',
            'TiledTileset',
            'TiledTileLayer',
@@ -43,7 +39,9 @@ __all__ = ['TiledElement',
            'TiledImageLayer',
            'TileFlags',
            'convert_to_bool',
-           'parse_properties']
+           'parse_properties')
+
+logger = logging.getLogger(__name__)
 
 # internal flags
 TRANS_FLIPX = 1
@@ -61,7 +59,7 @@ duplicate_name_fmt = 'Cannot set user {} property on {} "{}"; Tiled property alr
 flag_names = (
     'flipped_horizontally',
     'flipped_vertically',
-    'flipped_diagonally',)
+    'flipped_diagonally')
 
 TileFlags = namedtuple('TileFlags', flag_names)
 AnimationFrame = namedtuple('AnimationFrame', ['gid', 'duration'])
@@ -116,6 +114,7 @@ def convert_to_bool(text):
         return False
 
     raise ValueError
+
 
 # used to change the unicode string returned from xml to
 # proper python variable types.
@@ -189,7 +188,7 @@ class TiledElement(object):
             return False
 
         for k, v in items:
-            # i'm not sure why, but this has attr causes problems on python 2.7 with unicode
+            # i'm not sure why, but this hasattr causes problems on python 2.7 with unicode
             try:
                 # this will be called in py 3+
                 _hasattr = hasattr(self, k)
@@ -271,8 +270,8 @@ class TiledMap(TiledElement):
         TiledElement.allow_duplicate_names = \
             kwargs.get('allow_duplicate_names', False)
 
-        self.layers = list()           # all layers in proper order
-        self.tilesets = list()         # TiledTileset objects
+        self.layers = list()  # all layers in proper order
+        self.tilesets = list()  # TiledTileset objects
         self.tile_properties = dict()  # tiles that have properties
         self.layernames = dict()
 
@@ -280,7 +279,7 @@ class TiledMap(TiledElement):
         # between the GIDs in the Tiled map data (tmx) and the data in this
         # object and the layers.  This dictionary keeps track of that.
         self.gidmap = defaultdict(list)
-        self.imagemap = dict()     # mapping of gid and trans flags to real gids
+        self.imagemap = dict()  # mapping of gid and trans flags to real gids
         self.tiledgidmap = dict()  # mapping of tiledgid to pytmx gid
         self.maxgid = 1
 
@@ -290,9 +289,9 @@ class TiledMap(TiledElement):
         # defaults from the TMX specification
         self.version = 0.0
         self.orientation = None
-        self.width = 0       # width of map in tiles
-        self.height = 0      # height of map in tiles
-        self.tilewidth = 0   # width of a tile in pixels
+        self.width = 0  # width of map in tiles
+        self.height = 0  # height of map in tiles
+        self.tilewidth = 0  # width of a tile in pixels
         self.tileheight = 0  # height of a tile in pixels
         self.background_color = None
 

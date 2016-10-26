@@ -9,17 +9,17 @@ proof-of-concept for now and will improve on it in the future.
 
 Notice: slow!  no transparency!
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 import logging
 
-logger = logging.getLogger(__name__)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-logger.addHandler(ch)
-logger.setLevel(logging.INFO)
-
-from pytmx import *
-from pytmx.util_pyglet import load_pyglet
 import pyglet
+
+from pytmx import TiledTileLayer, TiledObjectGroup, TiledImageLayer
+from pytmx.util_pyglet import load_pyglet
+
+logger = logging.getLogger(__name__)
 
 
 class TiledRenderer(object):
@@ -28,12 +28,13 @@ class TiledRenderer(object):
 
     no shape drawing yet
     """
+
     def __init__(self, filename):
         tm = load_pyglet(filename)
         self.size = tm.width * tm.tilewidth, tm.height * tm.tileheight
         self.tmx_data = tm
-        self.batches = []   # list of batches, e.g. layers
-        self.sprites = []   # container for tiles
+        self.batches = []  # list of batches, e.g. layers
+        self.sprites = []  # container for tiles
         self.generate_sprites()
         self.clock_display = pyglet.clock.ClockDisplay()
 
@@ -56,8 +57,8 @@ class TiledRenderer(object):
         poly_color = (0, 255, 0)
 
         for layer in self.tmx_data.visible_layers:
-            batch = pyglet.graphics.Batch() # create a new batch
-            self.batches.append(batch)      # add the batch to the list
+            batch = pyglet.graphics.Batch()  # create a new batch
+            self.batches.append(batch)  # add the batch to the list
             # draw map tile layers
             if isinstance(layer, TiledTileLayer):
 
@@ -168,5 +169,5 @@ class TestWindow(pyglet.window.Window):
 if __name__ == '__main__':
     window = TestWindow(600, 600, vsync=False)
     # Add schedule_interval with a dummy callable to force speeding up fps
-    pyglet.clock.schedule_interval(int, 1./240)
+    pyglet.clock.schedule_interval(int, 1. / 240)
     pyglet.app.run()

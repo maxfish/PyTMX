@@ -6,15 +6,11 @@ Rendering demo for the TMXLoader.
 
 This should be considered --alpha-- quality.  I'm including it as a
 proof-of-concept for now and will improve on it in the future.
-
-For Windows users, you will need to download SDL2 runtime and
-place it where pysdl2 can find it.  Please check the pysdl2 docs
-for information on that process.
-
-Notice: slow!  no transparency!  no tile rotation!
 """
-
-from pytmx import *
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from pytmx import TiledTileLayer
 from pytmx.util_pysdl2_cffi import load_pysdl2_cffi
 
 

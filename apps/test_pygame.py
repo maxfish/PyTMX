@@ -13,19 +13,18 @@ If you are not familiar with python classes, you might want to check the
 Missing tests:
 - object rotation
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+import logging
+
 import pygame
 from pygame.locals import *
 
-from pytmx import *
+from pytmx import TiledTileLayer, TiledObjectGroup, TiledImageLayer
 from pytmx.util_pygame import load_pygame
 
-import logging
-
 logger = logging.getLogger(__name__)
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-logger.addHandler(ch)
-logger.setLevel(logging.INFO)
 
 
 def init_screen(width, height):

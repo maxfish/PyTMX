@@ -1,5 +1,5 @@
 """
-Copyright (C) 20012-2016
+Copyright (C) 2012-2016
 
 This file is part of pytmx.
 
@@ -16,11 +16,12 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with pytmx.  If not, see <http://www.gnu.org/licenses/>.
 """
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
 
 import logging
 from functools import partial
-
-logger = logging.getLogger(__name__)
 
 try:
     import sdl
@@ -28,8 +29,9 @@ except ImportError:
     logger.error('cannot import pysdl_cffi (is it installed?)')
     raise
 
-__all__ = ['load_pysdl2_cffi',
-           'pysdl2_cffi_image_loader']
+__all__ = ('load_pysdl2_cffi', 'pysdl2_cffi_image_loader')
+
+logger = logging.getLogger(__name__)
 
 flag_names = ('flipped_horizontally',
               'flipped_vertically',
