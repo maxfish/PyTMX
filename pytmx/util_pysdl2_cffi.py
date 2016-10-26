@@ -1,3 +1,22 @@
+"""
+Copyright (C) 20012-2016
+
+This file is part of pytmx.
+
+pytmx is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+pytmx is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with pytmx.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 import logging
 from functools import partial
 
@@ -23,9 +42,9 @@ def pysdl2_cffi_image_loader(ctx, filename, colorkey, **kwargs):
             try:
                 flip = 0
                 if flags.flipped_horizontally:
-                    flip |= sdl.SDL_FLIP_HORIZONTAL
+                    flip |= sdl.FLIP_HORIZONTAL
                 if flags.flipped_vertically:
-                    flip |= sdl.SDL_FLIP_VERTICAL
+                    flip |= sdl.FLIP_VERTICAL
                 if flags.flipped_diagonally:
                     flip |= 4
 
