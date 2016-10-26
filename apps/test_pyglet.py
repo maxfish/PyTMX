@@ -4,6 +4,8 @@ Leif Theden "bitcraft", 2012-2014
 
 Rendering demo for the TMXLoader.
 
+Uses the pyglet library.
+
 This should be considered --alpha-- quality.  I'm including it as a
 proof-of-concept for now and will improve on it in the future.
 
@@ -12,6 +14,7 @@ Notice: slow!  no transparency!
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
 import logging
 
 import pyglet

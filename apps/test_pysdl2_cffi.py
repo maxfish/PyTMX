@@ -4,14 +4,23 @@ Leif Theden "bitcraft", 2012-2014
 
 Rendering demo for the TMXLoader.
 
+Uses the pysdl2_cffi library.  Works with pypy!
+
 This should be considered --alpha-- quality.  I'm including it as a
 proof-of-concept for now and will improve on it in the future.
 """
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
+import logging
+
+import sdl
+
 from pytmx import TiledTileLayer
 from pytmx.util_pysdl2_cffi import load_pysdl2_cffi
+
+logger = logging.getLogger(__name__)
 
 
 class SDLContext(object):
@@ -145,8 +154,6 @@ def handle_sdl_errors(callback, sdl_context):
 
 
 if __name__ == '__main__':
-    import sdl
-
     sdl.init(sdl.INIT_VIDEO)
 
     ctx = SDLContext()

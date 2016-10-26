@@ -4,6 +4,8 @@ Leif Theden "bitcraft", 2012-2014
 
 Rendering demo for the TMXLoader.
 
+Uses the pygame library.
+
 Typically this is run to verify that any code changes do do break the loader.
 Tests all Tiled features -except- terrains and object rotation.
 
@@ -16,6 +18,7 @@ Missing tests:
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+
 import logging
 
 import pygame

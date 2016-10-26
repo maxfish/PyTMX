@@ -4,6 +4,8 @@ Leif Theden "bitcraft", 2012-2014
 
 Rendering demo for the TMXLoader.
 
+Uses the pysdl2 library.
+
 This should be considered --alpha-- quality.  I'm including it as a
 proof-of-concept for now and will improve on it in the future.
 
@@ -16,19 +18,14 @@ Notice: slow!  no transparency!  no tile rotation!
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-# QUICK SDL2 HACK FOR WINDOWS
-# 1. download and move SDL2.dll to apps folder
-# 2. uncomment the two lines of code below
-# 3. profit!
-import logging
-import os
 
-os.environ['PYSDL2_DLL_PATH'] = os.path.dirname(__file__)
+import logging
+
+import sdl2.ext
+from sdl2 import *
 
 from pytmx import TiledTileLayer
 from pytmx.util_pysdl2 import load_pysdl2
-from sdl2 import *
-import sdl2.ext
 
 logger = logging.getLogger(__name__)
 
