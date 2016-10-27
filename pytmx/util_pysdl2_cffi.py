@@ -85,13 +85,16 @@ def pysdl2_cffi_image_loader(ctx, filename, colorkey, **kwargs):
                 this_rect.y = rect[1]
                 this_rect.w = rect[2]
                 this_rect.h = rect[3]
-                return texture, this_rect, flip
+
+                angle = 90 if (flip & 4) else 0
+
+                return texture, this_rect, angle, flip
 
             except ValueError:
                 logger.error('Tile bounds outside bounds of tileset image')
                 raise
         else:
-            return texture, None, 0
+            return texture, None, 0, 0
 
     texture = sdl.image.loadTexture(ctx.renderer, filename)
 

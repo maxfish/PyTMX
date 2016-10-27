@@ -65,10 +65,9 @@ class TiledRenderer(object):
 
         # iterate over the tiles in the layer
         for x, y, tile in layer.tiles():
-            texture, src, flip = tile
+            texture, src, angle, flip = tile
             dest.x = x * tw
             dest.y = y * th
-            angle = 90 if (flip & 4) else 0
             rce(renderer, texture, src, dest, angle, None, flip)
 
     def render_map(self):
